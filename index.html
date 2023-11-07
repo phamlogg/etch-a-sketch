@@ -9,12 +9,22 @@
 </head>
 
 <body>
-	<h1>Etch A Sketch</h1>
-	<button>New Sketch</button>
-	<button id="pen">Pen</button>
-	<button id="eraser">Eraser</button>
-	<button id="clear">Clear</button>
-	<div class="container"></div>
+	<header>
+		<h1>Etch A Sketch</h1>
+	</header>
+	<main>
+		<div class="settings">
+			<button id="new">New</button>
+			<button id="pen">Pen</button>
+			<button id="eraser">Eraser</button>
+			<button id="clear">Clear</button>
+
+			<label for="color-picker">Color: </label>
+			<input type='color' id="color-picker">
+
+		</div>
+		<div class="container"></div>
+	</main>
 	<script src="./app.js"></script>
 </body>
 

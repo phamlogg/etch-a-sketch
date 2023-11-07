@@ -1,16 +1,27 @@
 const DEFAULT_GRID_SIZE = 16;
-const DEFAULT_COLOR = "black";
-const DEFAULT_BG_COLOR = "white";
-
-let size = DEFAULT_GRID_SIZE;
-let draw = true;
-let erase = false;
+const DEFAULT_COLOR = "#000000";
 
 const container = document.querySelector(".container");
+const colorPicker = document.querySelector("#color-picker");
+const newBtn = document.querySelector("#new");
+const penBtn = document.querySelector("#pen");
+const eraserBtn = document.querySelector("#eraser");
+const clearBtn = document.querySelector("#clear");
+let size = DEFAULT_GRID_SIZE;
+let currentColor = DEFAULT_COLOR;
+let drawMode = true;
+let eraseMode = false;
 
 window.onload = () => {
   setup(DEFAULT_GRID_SIZE);
+  colorPicker.value = DEFAULT_COLOR;
+  colorPicker.addEventListener('change', updateColor);
+  penBtn.setAttribute('disabled', '');
 };
+
+function updateColor(event) {
+  currentColor = event.target.value;
+}
 
 function setup(size) {
   for (let i = 0; i < size * size; i++) {
@@ -20,38 +31,44 @@ function setup(size) {
       "style",
       `width: ${500 / size}px; height: ${500 / size}px;`,
     );
+
+    square.addEventListener('click', () => {
+      if (drawMode) {
+        square.style.backgroundColor = currentColor;
+      } 
+      else if (eraseMode) {
+        square.style.backgroundColor = "#222336";
+      }
+    })
+
     container.appendChild(square);
   }
 }
 
-const squares = document.querySelectorAll(".square");
-squares.forEach((square) => square.addEventListener("click"));
-
-const button = document.querySelector("button");
-const pen = document.querySelector("#pen");
-const eraser = document.querySelector("#eraser");
-const clearBtn = document.querySelector("#clear");
-
-button.addEventListener("click", () => {
+newBtn.addEventListener("click", () => {
   size = newSketch();
   clear();
   setup(size);
 });
 
-pen.addEventListener("click", () => {
-  pen.setAttribute("disabled", "");
-  eraser.removeAttribute("disabled");
-});
+penBtn.addEventListener('click', draw);
+eraserBtn.addEventListener('click', erase);
 
-eraser.addEventListener("click", () => {
-  eraser.setAttribute("disabled", "");
-  pen.removeAttribute("disabled");
-});
+clearBtn.addEventListener('click', clear);
 
-clearBtn.addEventListener("click", () => {
-  clear();
-  setup(size);
-});
+function draw() {
+  drawMode = true;
+  eraseMode = false;
+  penBtn.setAttribute('disabled', '');
+  eraserBtn.removeAttribute('disabled');
+}
+
+function erase() {
+  drawMode = false;
+  eraseMode = true;
+  penBtn.removeAttribute('disabled');
+  eraserBtn.setAttribute('disabled', '');
+}
 
 function newSketch() {
   const num = parseInt(prompt("Number of squares per side: "));
@@ -63,4 +80,5 @@ function clear() {
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
+  setup(size);
 }
